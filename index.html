@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Берекелі бастау • Бақытты отау</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background:#fdfaf7;
+            color:#2d1e12;
+            font-family:'Cormorant Garamond',serif;
+            overflow-x:hidden;
+            background-image:
+                radial-gradient(circle at 20% 10%, rgba(245,220,210,0.45) 0%, transparent 50%),
+                radial-gradient(circle at 80% 90%, rgba(240,210,225,0.4) 0%, transparent 60%);
+            min-height:100vh;
+        }
+        .container { max-width:1140px; margin:0 auto; padding:0 20px; }
+        header {
+            min-height:100vh;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            text-align:center;
+            padding:80px 20px 120px;
+        }
+        .main-title {
+            font-family:'Playfair Display',serif;
+            font-size:clamp(4.2rem,10vw,10rem);
+            font-weight:700;
+            color:#3f1f12;
+            letter-spacing:-1.5px;
+            margin-bottom:0.15em;
+            animation:fadeInUp 1.6s ease-out;
+        }
+        .subtitle {
+            font-size:clamp(1.8rem,5vw,3rem);
+            color:#6b4a38;
+            margin-bottom:1.6em;
+            font-weight:500;
+            animation:fadeInUp 2s ease-out;
+        }
+        .date-block {
+            margin:3.5rem 0 4.5rem;
+            font-family:'Playfair Display',serif;
+            font-size:2.3rem;
+            color:#5c4033;
+            animation:fadeInUp 2.8s ease-out;
+        }
+        .date-block::before,
+        .date-block::after {
+            content:"✦";
+            font-size:1.5em;
+            color:#d4a373;
+            margin:0 1em;
+            opacity:0.75;
+        }
+        .place {
+            font-size:1.5rem;
+            color:#7a5a45;
+            margin-top:1.8rem;
+        }
+        .photo-places {
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+            gap:40px;
+            margin:6rem 0;
+            padding:0 10px;
+        }
+        .photo-frame {
+            height:420px;
+            background:#fff;
+            border:14px solid #fff;
+            box-shadow:0 12px 48px rgba(0,0,0,0.14);
+            transform:rotate(2deg);
+            transition:all 0.8s ease;
+            overflow:hidden;
+        }
+        .photo-frame:nth-child(even){transform:rotate(-2deg);}
+        .photo-frame:hover{
+            transform:scale(1.07) rotate(0deg);
+            box-shadow:0 24px 70px rgba(0,0,0,0.24);
+        }
+        .photo-frame img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            transition:transform 1.4s ease;
+        }
+        .photo-frame:hover img{transform:scale(1.15);}
+        .rsvp-section {
+            background:rgba(255,245,240,0.75);
+            backdrop-filter:blur(14px);
+            padding:7rem 20px;
+            text-align:center;
+            margin:7rem auto;
+            max-width:900px;
+            border-radius:32px;
+            box-shadow:0 12px 50px rgba(139,90,60,0.1);
+        }
+        .rsvp-title {
+            font-family:'Playfair Display',serif;
+            font-size:3.6rem;
+            margin-bottom:2.5rem;
+            color:#4a2c1a;
+        }
+        .form-container {
+            max-width:580px;
+            margin:0 auto;
+            display:grid;
+            gap:1.6rem;
+        }
+        input, select {
+            padding:16px 24px;
+            font-size:1.15rem;
+            border:2px solid #e8d5c5;
+            border-radius:14px;
+            background:white;
+            font-family:inherit;
+            transition:border-color 0.35s, box-shadow 0.35s;
+        }
+        input:focus, select:focus {
+            outline:none;
+            border-color:#c89f7f;
+            box-shadow:0 0 0 4px rgba(200,159,127,0.15);
+        }
+        button {
+            margin-top:2rem;
+            padding:18px 50px;
+            font-size:1.4rem;
+            background:#b5895e;
+            color:white;
+            border:none;
+            border-radius:14px;
+            cursor:pointer;
+            font-family:'Playfair Display',serif;
+            transition:all 0.4s ease;
+        }
+        button:hover {
+            background:#a0784e;
+            transform:translateY(-3px);
+            box-shadow:0 10px 30px rgba(181,137,94,0.35);
+        }
+        button:disabled {
+            background:#ccc;
+            cursor:not-allowed;
+            transform:none;
+        }
+        .message {
+            margin-top:1.5rem;
+            font-size:1.3rem;
+            padding:1rem;
+            border-radius:12px;
+            display:none;
+        }
+        .success { background:#e6ffe6; color:#006400; }
+        .error   { background:#ffe6e6; color:#8b0000; }
+        .hearts {
+            position:fixed;
+            pointer-events:none;
+            width:100%;
+            height:100%;
+            top:0;left:0;
+            z-index:-1;
+            overflow:hidden;
+        }
+        .heart {
+            position:absolute;
+            font-size:2rem;
+            color:rgba(180,90,110,0.5);
+            animation:float 20s infinite linear;
+            user-select:none;
+        }
+        h4 {
+            font-size: 20px;
+            text-align: start;
+            color: #4a2c1a;
+        }
+        @keyframes float {
+            0%   {transform:translateY(110vh) rotate(0deg); opacity:0;}
+            10%  {opacity:0.8;}
+            90%  {opacity:0.7;}
+            100% {transform:translateY(-40vh) rotate(720deg); opacity:0;}
+        }
+        @keyframes fadeInUp {
+            from {opacity:0; transform:translateY(80px);}
+            to   {opacity:1; transform:translateY(0);}
+        }
+        @media (max-width:680px) {
+            header {padding:60px 15px 100px;}
+            .main-title {font-size:6.5rem;}
+            .subtitle {font-size:2.4rem;}
+            .date-block {font-size:1.9rem;}
+            .rsvp-title {font-size:2.8rem;}
+        }
+    </style>
+</head>
+<body>
+<div class="hearts" id="hearts"></div>
+<header>
+    <div class="container">
+        <h1 class="main-title">Береке мен Бақыт</h1>
+        <div class="subtitle">Берекелі бастау, бақытты отау</div>
+       
+        <div style="font-size:clamp(2.1rem,5.5vw,3.6rem); margin:2rem 0 3.5rem;">
+            Жаңа басталған өмірімізге ақ ниетпен,<br>
+            шаңырағымызға шаттық тілеп келуге шақырамыз
+        </div>
+        <div class="date-block">
+            2026 жылдың 22 наурызы • 17:00
+        </div>
+        <div class="place">
+            Мекен-жайы: Dilu Plaza мейрамханасы • Астана қаласы • Е126 көшесі, 6А <br>
+            <a href="https://2gis.kz/astana/geo/70000001055312155/71.347903,51.146402"
+               target="_blank"
+               style="color:#8b5a3c; text-decoration:none; border-bottom:1px solid #c89f7f; font-size:1.3rem;">
+               Картада қарау →
+            </a>
+        </div>
+    </div>
+</header>
+<section class="photo-places container">
+    <div class="photo-frame"><img src="04.jpg" alt=""></div>
+    <div class="photo-frame"><img src="03.jpg" alt=""></div>
+    <div class="photo-frame"><img src="02.jpg" alt=""></div>
+    <div class="photo-frame"><img src="01.jpg" alt=""></div>
+</section>
+<section class="rsvp-section container">
+    <h2 class="rsvp-title">Бізге келесіз бе?</h2>
+   
+    <form class="form-container" id="rsvpForm">
+        <select name="attending" required>
+            <option value="" disabled selected>Келе аласыз ба?</option>
+            <option value="yes">Иә, қуана келемін</option>
+            <option value="no">Өкінішке қарай келе алмаймын</option>
+        </select>
+        <input type="text" name="name" placeholder="Аты-жөніңіз" required>
+        <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+        <h4>Адам саны (Сізбен бірге қанша адам келеді?)</h4>
+        <input type="number" name="guests" placeholder="Адам саны" min="1" value="1">
+        <button type="submit" id="submitBtn">Жауап жіберу</button>
+        <div id="formMessage" class="message"></div>
+    </form>
+</section>
+<script>
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerHTML = ['♥','♡','💞','✿','❀'][Math.floor(Math.random()*5)];
+        heart.style.left = Math.random()*100 + 'vw';
+        heart.style.animationDuration = (14 + Math.random()*16) + 's';
+        heart.style.fontSize = (1.4 + Math.random()*2.4) + 'rem';
+        document.getElementById('hearts').appendChild(heart);
+        setTimeout(() => heart.remove(), 25000);
+    }
+    setInterval(createHeart, 700);
+    
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzOHx8cBCFH6oOyuxsZL0ESsETJjF7oyevW77Zo3AcpWL0hRXvSZrMhA_y83Dhdlmia/exec';
+    
+    document.getElementById('rsvpForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+       
+        const form = this;
+        const submitBtn = document.getElementById('submitBtn');
+        const messageDiv = document.getElementById('formMessage');
+        
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Жіберілуде...';
+        messageDiv.style.display = 'none';
+       
+        const formData = new FormData(form);
+        
+        console.log('Отправка данных:', {
+            attending: formData.get('attending'),
+            name: formData.get('name'),
+            phone: formData.get('phone'),
+            guests: formData.get('guests')
+        });
+       
+        fetch(scriptURL, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Ответ от сервера:', data);
+            if (data.result === 'success') {
+                messageDiv.textContent = 'Рақмет! Жауабыңыз қабылданды. Сізді күтеміз! ❤️';
+                messageDiv.className = 'message success';
+                messageDiv.style.display = 'block';
+                form.reset();
+            } else {
+                throw new Error(data.message || 'Қате шықты');
+            }
+        })
+        .catch(error => {
+            console.error('Қате:', error);
+            messageDiv.textContent = 'Қате болды: ' + error.message;
+            messageDiv.className = 'message error';
+            messageDiv.style.display = 'block';
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Жауап жіберу';
+        });
+    });
+</script>
+</body>
+</html>
